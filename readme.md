@@ -1,6 +1,6 @@
 # Sistem Shuttle Antar Kota
 
-**Mini Project 1 — Checkpoint 2**  
+**Mini Project 2**  
 **Praktikum Pemrograman Berorientasi Objek**
 
 **Nama:** Zefri Al Rizqullah  
@@ -8,40 +8,25 @@
 
 ---
 
-## 1. Deskripsi Singkat Program
+#### 1. Deskripsi Singkat Program
 
-**Sistem Shuttle Antar Kota** merupakan program berbasis **Java CLI (Command Line Interface)** yang digunakan untuk membantu pengelolaan layanan shuttle antar kota. Program merupakan pengembangan dari Mini Project 1 sebelumnya dengan menambahkan penerapan konsep Pemrograman Berorientasi Objek yang lebih lengkap.
+**Sistem Shuttle Antar Kota** merupakan program berbasis Java CLI (Command Line Interface) yang dirancang untuk mengelola proses layanan shuttle antar kota, mulai dari pengelolaan data penumpang, jadwal perjalanan, pemesanan, hingga tiket perjalanan.
 
-Program dapat digunakan untuk mengelola:
+Program memiliki tiga proses pengelolaan utama, yaitu data penumpang, jadwal shuttle, dan pemesanan. Penumpang dan jadwal dapat ditambah, ditampilkan, diubah, serta dihapus. Setiap data memiliki ID yang dibuat secara otomatis oleh sistem sehingga pengguna tidak perlu menentukan ID secara manual.
 
-- Data penumpang.
-- Data jadwal shuttle.
-- Ketersediaan kursi.
-- Pemesanan tiket.
-- Tiket Reguler dan Prioritas.
-- Pencarian tiket berdasarkan nomor tiket.
-- Statistik penjualan dan pendapatan.
+Pada proses pemesanan, pengguna memilih penumpang dan jadwal yang tersedia, menentukan jumlah tiket, kemudian memilih jenis Tiket Reguler atau Tiket Prioritas. Tiket Reguler mendapatkan kursi yang ditentukan otomatis oleh sistem, sedangkan Tiket Prioritas memungkinkan pengguna memilih sendiri kursi yang masih tersedia dengan tambahan biaya Rp25.000. Dalam konsep layanan nyata, tiket prioritas juga dapat menggambarkan layanan dengan benefit tambahan seperti lunch/snack, priority boarding, atau fasilitas khusus lainnya.
 
-Data program disimpan sementara menggunakan `ArrayList`. Ketika program ditutup, data yang ditambahkan selama program berjalan tidak disimpan secara permanen.
+Setiap tiket yang berhasil dibuat memiliki nomor tiket unik dan terhubung dengan data penumpang, pemesanan, jadwal, serta nomor kursi. Kursi yang telah dipesan akan ditandai sebagai terisi dan tidak dapat digunakan oleh tiket lain. Jika pemesanan dibatalkan, kursi tersebut akan otomatis tersedia kembali.
 
-Program juga menyediakan **dummy data awal**, sehingga saat program pertama kali dijalankan pengguna dapat langsung mencoba fitur tampil data tanpa harus memasukkan data terlebih dahulu.
+Program juga menyediakan fitur pencarian tiket berdasarkan nomor tiket serta ringkasan statistik untuk melihat jumlah penumpang, jadwal, pemesanan, tiket Reguler dan Prioritas yang terjual, hingga total pendapatan. Pada awal program tersedia **dummy data** agar data dapat langsung ditampilkan tanpa harus melakukan input terlebih dahulu.
 
-### 1.1 Konsep Tiket Reguler dan Prioritas
+Seluruh data selama program berjalan dikelola menggunakan `ArrayList`. Program menggunakan struktur MVC (Model-View-Controller) untuk memisahkan pengelolaan data, proses program, dan tampilan. Selain itu, program menerapkan konsep encapsulation, inheritance, polymorphism, access modifier, validasi input, serta dilengkapi splash screen dan animasi loading agar tampilan program lebih terstruktur dan interaktif.
 
-Program menyediakan dua jenis tiket, yaitu **Tiket Reguler** dan **Tiket Prioritas**.
+Secara sederhana, konsep kerja program dapat digambarkan sebagai berikut:
 
-Dalam aturan yang diterapkan pada program:
-
-| Jenis Tiket | Pemilihan Kursi | Harga |
-|---|---|---|
-| Reguler | Kursi dipilih otomatis oleh sistem | Harga dasar |
-| Prioritas | Penumpang dapat memilih kursi yang masih tersedia | Harga dasar + Rp25.000 |
-
-Pada **Tiket Reguler**, sistem akan mencari kursi kosong pertama dan menentukan kursi tersebut secara otomatis.
-
-Pada **Tiket Prioritas**, pengguna dapat melihat ketersediaan kursi dan memilih sendiri kursi yang diinginkan. Tiket Prioritas dikenakan biaya tambahan sebesar **Rp25.000**.
-
-Konsep tersebut dibuat sebagai penyederhanaan untuk implementasi program. Dalam gambaran layanan shuttle di dunia nyata, layanan prioritas dapat dikembangkan dengan manfaat tambahan selain pemilihan kursi, misalnya **lunch/snack, priority boarding, fasilitas tambahan, atau pelayanan khusus lainnya**. Pada program ini, perbedaan yang benar-benar diimplementasikan dalam kode difokuskan pada **pemilihan kursi dan biaya prioritas**.
+```text
+Kelola Penumpang & Jadwal --> Buat Pemesanan --> Pilih Reguler / Prioritas --> Sistem Menentukan/Memilih Kursi --> Nomor Tiket Dibuat Otomatis --> Pemesanan Disimpan --> Cari Tiket & Lihat Statistik
+```
 
 ---
 
@@ -50,27 +35,6 @@ Konsep tersebut dibuat sebagai penyederhanaan untuk implementasi program. Dalam 
 Program dikembangkan menggunakan struktur **MVC (Model-View-Controller)** agar kode lebih terorganisir dan setiap bagian memiliki tanggung jawab yang jelas.
 
 Struktur package program adalah sebagai berikut:
-
-```text
-src/
-│
-├── app/
-│   └── Main.java
-│
-├── controller/
-│   └── ShuttleController.java
-│
-├── model/
-│   ├── Penumpang.java
-│   ├── JadwalShuttle.java
-│   ├── Pemesanan.java
-│   ├── Tiket.java
-│   ├── TiketReguler.java
-│   └── TiketPrioritas.java
-│
-└── view/
-    └── ShuttleView.java
-```
 
 > **Gambar 1. Struktur Package Project**
 
@@ -136,7 +100,7 @@ view.jalankan();
 
 `Main` hanya membuat object `ShuttleController`, menghubungkannya dengan `ShuttleView`, kemudian menjalankan program melalui method `jalankan()`.
 
-Pembagian tersebut membuat `Main.java` tetap sederhana karena proses pengolahan data dilakukan Controller dan tampilan ditangani View.
+Pembagian tersebut membuat `Main.java` tetap sederhana karena proses pengolahan data dilakukan Controller dan tampilan ditangani View. Dan dapat disimpulkan penerapan struktur MVC pada program ini sudah cukup baik.
 
 ---
 
@@ -147,20 +111,6 @@ Pembagian tersebut membuat `Main.java` tetap sederhana karena proses pengolahan 
 Ketika program pertama kali dijalankan, sistem menampilkan **Splash Screen** sebelum masuk ke menu utama.
 
 Splash screen menampilkan nama aplikasi, judul sistem, proses `Starting System`, progress loading, dan pesan `System Ready!`.
-
-```text
-==========================================
-              SHUTTLE APPS
-==========================================
-
-     SISTEM SHUTTLE ANTAR KOTA PLATKT
-
-           Starting System.....
-
-        [####################] 100%
-
-           System Ready!
-```
 
 Animasi dibuat menggunakan perulangan dan `Thread.sleep()`. Karakter `#` dicetak secara bertahap sehingga terlihat seperti progress loading.
 
@@ -176,18 +126,6 @@ Splash screen berfungsi sebagai tampilan pembuka agar program lebih menarik dan 
 
 Setelah splash screen selesai, pengguna masuk ke menu utama.
 
-```text
-==================================
- SISTEM SHUTTLE ANTAR KOTA PLATKT
-==================================
-1. Kelola Penumpang
-2. Kelola Jadwal
-3. Kelola Pemesanan
-4. Cari Tiket
-5. Ringkasan Sistem
-0. Keluar
-```
-
 > **Gambar 3. Tampilan Menu Utama**
 
 ![Gambar 3 - Tampilan Menu Utama](images/menu-utama.png)
@@ -200,25 +138,15 @@ Setiap pilihan menu juga divalidasi. Pengguna hanya dapat memasukkan angka sesua
 
 # 4. Alur Kelola Penumpang
 
-## 4.1 Menampilkan Dummy Data Penumpang
+## 4.1 Menampilkan Penumpang
 
 Saat program dibuat, Controller menjalankan method `isiDummyData()`.
 
-Dummy data penumpang yang tersedia adalah:
-
-```text
-ID Penumpang : P001
-Nama         : Andi Saputra
-No HP        : 081234567890
-```
-
 Dengan demikian, pengguna dapat langsung memilih fitur **Tampilkan Penumpang** tanpa harus menambahkan data terlebih dahulu.
 
-> **Gambar 4. Tampilan Dummy Data Penumpang**
+> **Gambar 4. Tampilan Data Penumpang**
 
-![Gambar 4 - Dummy Data Penumpang](images/penumpang-read.png)
-
-Hal ini sekaligus memenuhi ketentuan Checkpoint 2 mengenai penyediaan minimal satu dummy data di dalam `ArrayList`.
+![Gambar 4 - Data Penumpang](images/penumpang-read.png)
 
 ---
 
@@ -233,16 +161,6 @@ ID tidak perlu dimasukkan karena dibuat otomatis oleh sistem.
 
 Contohnya:
 
-```text
-TAMBAH PENUMPANG
-Nama  : Budi Santoso
-No HP : 081234567899
-
-Menyimpan data...
-Penumpang berhasil ditambahkan.
-ID Penumpang: P002
-```
-
 > **Gambar 5. Proses Menambah Penumpang**
 
 ![Gambar 5 - Tambah Penumpang](images/penumpang-create.png)
@@ -253,7 +171,6 @@ ID dibuat otomatis dengan format:
 P001
 P002
 P003
-...
 ```
 
 Dengan cara ini, pengguna tidak dapat memasukkan ID secara sembarangan dan kemungkinan ID duplikat dapat dihindari.
@@ -263,14 +180,6 @@ Dengan cara ini, pengguna tidak dapat memasukkan ID secara sembarangan dan kemun
 ## 4.3 Mengubah Penumpang
 
 Pengguna dapat memilih data berdasarkan ID penumpang kemudian memasukkan nama dan nomor HP yang baru.
-
-```text
-ID Penumpang yang diubah: P002
-Nama baru  : Budi Setiawan
-No HP baru : 081234567899
-
-Data penumpang berhasil diubah.
-```
 
 > **Gambar 6. Proses Mengubah Data Penumpang**
 
@@ -286,11 +195,6 @@ Data penumpang dapat dihapus berdasarkan ID.
 
 Namun, jika penumpang masih memiliki pemesanan aktif, data tidak dapat langsung dihapus.
 
-```text
-Penumpang tidak dapat dihapus.
-Batalkan pemesanan terlebih dahulu.
-```
-
 > **Gambar 7. Validasi Penghapusan Penumpang**
 
 ![Gambar 7 - Hapus Penumpang](images/penumpang-delete.png)
@@ -301,31 +205,15 @@ Validasi tersebut digunakan agar data pemesanan tidak kehilangan hubungan dengan
 
 # 5. Alur Kelola Jadwal
 
-## 5.1 Menampilkan Dummy Data Jadwal
+## 5.1 Menampilkan Data Jadwal
 
-Program menyediakan dummy jadwal:
-
-```text
-ID Jadwal       : J001
-Rute            : Samarinda -> Balikpapan
-Jam Berangkat   : 08:00
-Harga Dasar     : Rp150000
-Kapasitas Kursi : 10
-Tiket Tersedia  : 10
-```
+Program telah menyediakan dummy data jadwal:
 
 > **Gambar 8. Tampilan Dummy Data Jadwal**
 
 ![Gambar 8 - Dummy Data Jadwal](images/jadwal-read.png)
 
-ID jadwal juga dibuat otomatis dengan format:
-
-```text
-J001
-J002
-J003
-...
-```
+Dengan menampilkan keseluruhan data daei jadwal yang tersedia
 
 ---
 
@@ -341,24 +229,19 @@ Untuk menambahkan jadwal, pengguna memasukkan:
 
 Contoh:
 
-```text
-TAMBAH JADWAL
-Kota Asal      : Samarinda
-Kota Tujuan    : Bontang
-Jam (HH:mm)    : 10:30
-Harga          : 100000
-Kapasitas      : 8
-
-Menyimpan jadwal...
-Jadwal berhasil ditambahkan.
-ID Jadwal: J002
-```
-
 > **Gambar 9. Proses Menambah Jadwal**
 
 ![Gambar 9 - Tambah Jadwal](images/jadwal-create.png)
 
 Program memastikan kota asal dan tujuan tidak sama, jam menggunakan format `HH:mm`, harga minimal Rp10.000, dan kapasitas berada antara 1 sampai 30 kursi.
+
+ID jadwal juga dibuat otomatis dengan format:
+
+```text
+J001
+J002
+J003
+```
 
 ---
 
@@ -381,11 +264,6 @@ Kapasitas tidak dapat diubah secara sembarangan apabila perubahan tersebut berte
 Jadwal dapat dihapus selama belum memiliki pemesanan.
 
 Apabila masih terdapat pemesanan, sistem menolak penghapusan.
-
-```text
-Jadwal tidak dapat dihapus.
-Masih terdapat pemesanan pada jadwal tersebut.
-```
 
 > **Gambar 11. Validasi Penghapusan Jadwal**
 
@@ -439,27 +317,7 @@ Dengan demikian, ketersediaan tiket selalu mengikuti kondisi kursi.
 
 ## 6.1 Memilih Penumpang dan Jadwal
 
-Saat membuat pemesanan, pengguna terlebih dahulu memilih penumpang dari data yang tersedia.
-
-```text
-PILIH PENUMPANG
-
-1. Andi Saputra
-2. Budi Santoso
-
-Pilih penumpang: 2
-```
-
-Selanjutnya pengguna memilih jadwal.
-
-```text
-PILIH JADWAL
-
-1. Samarinda -> Balikpapan | 08:00 | Sisa: 10
-2. Samarinda -> Bontang | 10:30 | Sisa: 8
-
-Pilih jadwal: 1
-```
+Saat membuat pemesanan, pengguna terlebih dahulu memilih penumpang dari data yang tersedia. Lalu selanjutnya pengguna memilih jadwal.
 
 > **Gambar 13. Proses Memilih Penumpang dan Jadwal**
 
@@ -474,14 +332,6 @@ Pengguna memilih berdasarkan nomor urut sehingga tidak perlu menghafal ID penump
 Setelah memilih jadwal, pengguna menentukan jumlah tiket.
 
 Setiap tiket kemudian dapat dipilih sebagai:
-
-```text
-1. Reguler
-   Harga normal, kursi otomatis
-
-2. Prioritas
-   Pilih kursi + biaya Rp25.000
-```
 
 > **Gambar 14. Pemilihan Jenis Tiket**
 
@@ -501,7 +351,6 @@ Setiap tiket memperoleh nomor otomatis:
 TKT0001
 TKT0002
 TKT0003
-...
 ```
 
 Sedangkan pemesanan memiliki ID:
@@ -510,21 +359,9 @@ Sedangkan pemesanan memiliki ID:
 PS001
 PS002
 PS003
-...
 ```
 
 Contoh hasil transaksi:
-
-```text
-Pemesanan berhasil.
-ID Pemesanan : PS001
-Jumlah Tiket : 2
-Total Harga  : Rp325000
-
-NOMOR TIKET
-TKT0001 | Reguler   | Kursi 1
-TKT0002 | Prioritas | Kursi 5
-```
 
 > **Gambar 15. Hasil Pemesanan Tiket**
 
@@ -537,18 +374,6 @@ Total harga tidak disimpan sebagai angka tetap. Program menghitungnya dari selur
 ## 6.4 Menampilkan Data Pemesanan
 
 Menu tampil pemesanan menampilkan informasi pemesanan beserta tiket yang dimiliki.
-
-```text
-ID Pemesanan : PS001
-ID Penumpang : P002
-ID Jadwal    : J001
-Jumlah Tiket : 2
-Total Harga  : Rp325000
-
-Daftar Tiket:
-- TKT0001 | Reguler | Kursi 1
-- TKT0002 | Prioritas | Kursi 5
-```
 
 > **Gambar 16. Tampilan Data Pemesanan**
 
@@ -569,13 +394,6 @@ Ketika pemesanan dibatalkan:
 3. Seluruh kursi dari tiket pada pemesanan dikosongkan kembali.
 4. Pemesanan dihapus dari `ArrayList`.
 
-Contoh:
-
-```text
-Pemesanan berhasil dibatalkan.
-Kursi kembali tersedia.
-```
-
 > **Gambar 17. Proses Pembatalan Pemesanan**
 
 ![Gambar 17 - Batalkan Pemesanan](images/pemesanan-delete.png)
@@ -595,22 +413,6 @@ Nomor Tiket: TKT0002
 ```
 
 Apabila tiket ditemukan, sistem menampilkan informasi tiket, penumpang, dan jadwal.
-
-```text
-==================================
-          TIKET SHUTTLE
-==================================
-Nomor Tiket : TKT0002
-Jenis Tiket : Prioritas
-Nomor Kursi : 5
-Harga       : Rp175000
-Layanan     : Bebas memilih kursi
-Biaya       : Rp25000
-Penumpang   : Budi Santoso
-Rute        : Samarinda -> Balikpapan
-Berangkat   : 08:00
-==================================
-```
 
 > **Gambar 18. Hasil Pencarian Tiket**
 
@@ -643,33 +445,6 @@ Informasi yang ditampilkan meliputi:
 - Total pendapatan.
 
 Contoh:
-
-```text
-==========================================
-            STATISTIK SHUTTLE
-==========================================
-
-DATA UTAMA
-------------------------------------------
-Total Penumpang          : 3
-Total Jadwal             : 2
-Total Pemesanan          : 2
-
-PENJUALAN TIKET
-------------------------------------------
-Total Tiket Terjual      : 4
-Tiket Reguler            : 2
-Tiket Prioritas          : 2
-
-PENDAPATAN
-------------------------------------------
-Reguler                  : Rp300,000
-Prioritas                : Rp350,000
-------------------------------------------
-Total Pendapatan         : Rp650,000
-
-==========================================
-```
 
 > **Gambar 19. Tampilan Ringkasan dan Statistik Sistem**
 
@@ -807,19 +582,11 @@ Inheritance diterapkan pada jenis tiket.
 
 Hierarki class yang digunakan adalah:
 
-```text
-                 Tiket
-                   │
-          ┌────────┴────────┐
-          │                 │
-   TiketReguler      TiketPrioritas
-```
-
-`Tiket` berfungsi sebagai **superclass**, sedangkan `TiketReguler` dan `TiketPrioritas` merupakan **subclass**.
-
 > **Gambar 22. Hierarki Class Tiket**
 
 ![Gambar 22 - Hierarki Class Tiket](images/hierarki-tiket.png)
+
+`Tiket` berfungsi sebagai **superclass**, sedangkan `TiketReguler` dan `TiketPrioritas` merupakan **subclass**.
 
 Class `Tiket` menyimpan atribut umum yang dimiliki semua jenis tiket:
 
@@ -852,7 +619,7 @@ Perbedaan perilaku kemudian ditempatkan pada masing-masing subclass.
 
 # 12. Penerapan Polymorphism
 
-Polymorphism menjadi salah satu nilai tambah pada program dan diterapkan bersama inheritance.
+Polymorphism menjadi salah satu nilai tambah pada program dan diterapkan.
 
 Pemesanan menyimpan tiket menggunakan:
 
@@ -897,13 +664,7 @@ public double hitungHarga() {
 }
 ```
 
-Ketika program menjalankan:
-
-```java
-tiket.hitungHarga();
-```
-
-hasilnya dapat berbeda sesuai object sebenarnya.
+Ketika program menjalankan dijalankan hasilnya dapat berbeda sesuai object sebenarnya.
 
 Jika object adalah `TiketReguler`, harga menggunakan harga dasar.
 
@@ -918,10 +679,10 @@ Contoh:
 ```text
 Harga Dasar       : Rp150.000
 Biaya Prioritas   : Rp 25.000
-Harga Prioritas   : Rp175.000
+Total Harga   : Rp175.000
 ```
 
-Hal ini menunjukkan bahwa object dengan superclass yang sama dapat mempunyai perilaku berbeda sesuai subclass-nya.
+Ini menunjukkan bahwa object dengan superclass yang sama dapat mempunyai perilaku berbeda sesuai subclass-nya.
 
 ---
 
@@ -929,25 +690,7 @@ Hal ini menunjukkan bahwa object dengan superclass yang sama dapat mempunyai per
 
 Access modifier digunakan untuk mengatur bagian program yang dapat diakses dari class lain.
 
-Atribut penting menggunakan:
-
-```java
-private
-```
-
-contohnya:
-
-```java
-private ArrayList<Penumpang> daftarPenumpang;
-private ArrayList<JadwalShuttle> daftarJadwal;
-private ArrayList<Pemesanan> daftarPemesanan;
-```
-
-Method yang perlu digunakan oleh class lain menggunakan:
-
-```java
-public
-```
+Access yang perlu digunakan oleh class lain menggunakan `public`.
 
 contohnya:
 
@@ -957,13 +700,7 @@ public JadwalShuttle cariJadwal(String id)
 public Tiket cariTiket(String nomorTiket)
 ```
 
-Sedangkan method yang hanya digunakan di dalam class menggunakan:
-
-```java
-private
-```
-
-contohnya:
+Sedangkan access yang hanya digunakan di dalam class menggunakan `private`.
 
 ```java
 private String buatIdPenumpang()
@@ -972,7 +709,7 @@ private String buatIdPemesanan()
 private String buatNomorTiket()
 ```
 
-Dengan demikian, setiap bagian program memiliki batas akses sesuai kebutuhan.
+Jadi setiap bagian program memiliki batas akses sesuai kebutuhan.
 
 ---
 
@@ -997,8 +734,8 @@ Method tersebut langsung memasukkan satu penumpang dan satu jadwal awal.
 ```java
 Penumpang penumpang = new Penumpang(
         buatIdPenumpang(),
-        "Andi Saputra",
-        "081234567890"
+        "Zeyya Alvyoza",
+        "081316120091"
 );
 
 daftarPenumpang.add(penumpang);
@@ -1019,7 +756,7 @@ JadwalShuttle jadwal = new JadwalShuttle(
 daftarJadwal.add(jadwal);
 ```
 
-Tujuannya agar ketika fitur **Read/Tampilkan Data** pertama kali dijalankan, program sudah mempunyai data yang dapat ditampilkan.
+Tujuannya agar ketika fitur Tampilkan Data pertama kali dijalankan, program sudah mempunyai data yang dapat ditampilkan.
 
 ---
 
@@ -1030,9 +767,10 @@ Tujuannya agar ketika fitur **Read/Tampilkan Data** pertama kali dijalankan, pro
 Program menerapkan struktur MVC dengan pemisahan:
 
 ```text
-Model      → menyimpan dan mengatur data
-View       → menampilkan program dan menerima input
-Controller → mengatur proses dan menghubungkan View dengan Model
+Model      --> menyimpan dan mengatur data
+View       --> menampilkan program dan menerima input
+Controller --> mengatur proses dan menghubungkan View dengan Model
+Main       --> tempat dimana program utama dijalankan
 ```
 
 Pemisahan tersebut membuat kode lebih terstruktur dibandingkan menempatkan seluruh proses di dalam `Main.java`.
@@ -1055,34 +793,7 @@ dapat memberikan hasil berbeda sesuai jenis object tiket yang sedang digunakan.
 
 ---
 
-## 15.3 ID dan Nomor Tiket Otomatis
-
-Pengguna tidak perlu memasukkan ID secara manual.
-
-Program membuat ID menggunakan counter:
-
-```text
-Penumpang  : P001, P002, P003, ...
-Jadwal     : J001, J002, J003, ...
-Pemesanan  : PS001, PS002, PS003, ...
-Tiket      : TKT0001, TKT0002, TKT0003, ...
-```
-
-Fitur ini membuat identitas data lebih konsisten dan mengurangi risiko ID duplikat akibat input pengguna.
-
----
-
-## 15.4 Pengelolaan Kursi Otomatis
-
-Program tidak hanya menghitung jumlah tiket, tetapi juga mencatat nomor kursi yang sudah digunakan.
-
-Tiket Reguler mendapatkan kursi kosong pertama secara otomatis, sedangkan Tiket Prioritas dapat memilih kursi yang tersedia.
-
-Ketika pemesanan dibatalkan, kursi pada seluruh tiket di dalam pemesanan akan dikosongkan kembali.
-
----
-
-## 15.5 Splash Screen dan Loading
+## 15.3 Splash Screen dan Loading
 
 Program memiliki splash screen saat pertama kali dijalankan.
 
@@ -1101,38 +812,11 @@ Fitur ini tidak memengaruhi proses utama program, tetapi membuat tampilan CLI le
 
 ---
 
-## 15.6 Statistik Shuttle
+## 16. Kesimpulan
+**Sistem Shuttle Antar Kota** berhasil dibuat sebagai program berbasis Java CLI yang dapat mengelola proses layanan shuttle secara terstruktur, mulai dari pengelolaan data penumpang dan jadwal, pemesanan tiket, pengaturan ketersediaan kursi, pencarian tiket, hingga penyajian statistik sistem.
 
-Menu Ringkasan Sistem dikembangkan menjadi statistik yang dapat menghitung:
+Program mampu menghubungkan setiap proses yang ada. Penumpang dapat memilih jadwal yang tersedia dan melakukan pemesanan menggunakan Tiket Reguler atau Tiket Prioritas. Setiap pemesanan menghasilkan nomor tiket dan nomor kursi yang dikelola secara otomatis. Kursi yang telah digunakan tidak dapat dipilih kembali, sedangkan pembatalan pemesanan akan mengembalikan kursi menjadi tersedia. Data transaksi tersebut juga digunakan untuk menghasilkan informasi jumlah tiket yang terjual dan total pendapatan pada ringkasan sistem.
 
-- Jumlah data utama.
-- Jumlah tiket terjual.
-- Jumlah Tiket Reguler.
-- Jumlah Tiket Prioritas.
-- Pendapatan setiap jenis tiket.
-- Total pendapatan.
+Dari sisi struktur program, penggunaan **MVC** membuat pengelolaan data, proses, dan tampilan lebih terpisah dan terorganisir. Penerapan encapsulation, inheritance, polymorphism, access modifier, ArrayList, serta validasi input juga membuat program memiliki struktur OOP yang lebih jelas serta membantu menjaga data dan proses agar berjalan sesuai aturan yang telah ditentukan.
 
-Perhitungan dilakukan berdasarkan object pemesanan dan tiket yang tersimpan sehingga nilai statistik mengikuti kondisi data program.
-
----
-
-# 16. Kesimpulan
-
-Sistem Shuttle Antar Kota pada Checkpoint 2 merupakan pengembangan dari Mini Project 1 yang sebelumnya berfokus pada CRUD dasar.
-
-Pada versi ini, program telah dikembangkan dengan penerapan:
-
-- Validasi input.
-- Access modifier.
-- Encapsulation dengan getter dan setter.
-- Inheritance dengan superclass `Tiket`.
-- Dua subclass yaitu `TiketReguler` dan `TiketPrioritas`.
-- Dummy data awal di dalam `ArrayList`.
-- Struktur MVC.
-- Polymorphism melalui method overriding.
-- ID dan nomor tiket otomatis.
-- Pengelolaan nomor kursi.
-- Splash screen dan loading.
-- Statistik tiket dan pendapatan.
-
-Dengan pengembangan tersebut, program tidak hanya digunakan untuk mengelola data penumpang, jadwal, dan pemesanan, tetapi juga menerapkan konsep dasar Pemrograman Berorientasi Objek dalam proses pengelolaan tiket shuttle.
+Secara keseluruhan, hasil akhir program tidak hanya mampu menjalankan fungsi pengelolaan data dan pemesanan shuttle, tetapi juga membentuk sebuah sistem sederhana yang saling terintegrasi antara penumpang, jadwal, pemesanan, tiket, kursi, dan statistik. Penambahan splash screen, loading, ID otomatis, dua jenis tiket, serta pengelolaan kursi membuat program lebih interaktif dan memberikan gambaran yang lebih nyata mengenai proses layanan shuttle antar kota.

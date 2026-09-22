@@ -50,7 +50,7 @@ public class ShuttleController {
     }
 
     private void isiDummyData() {
-        Penumpang penumpang = new Penumpang(buatIdPenumpang(), "Andi Saputra", "081234567890");
+        Penumpang penumpang = new Penumpang(buatIdPenumpang(), "Zeyya Alvyoza", "081316120091");
         daftarPenumpang.add(penumpang);
         JadwalShuttle jadwal = new JadwalShuttle(buatIdJadwal(), "Samarinda", "Balikpapan", "08:00", 150000, 10);
         daftarJadwal.add(jadwal);
