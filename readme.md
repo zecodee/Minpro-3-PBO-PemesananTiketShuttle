@@ -207,11 +207,11 @@ Validasi tersebut digunakan agar data pemesanan tidak kehilangan hubungan dengan
 
 ## 5.1 Menampilkan Data Jadwal
 
-Program telah menyediakan dummy data jadwal:
+Program telah menyediakan data jadwal:
 
-> **Gambar 8. Tampilan Dummy Data Jadwal**
+> **Gambar 8. Tampilan Data Jadwal**
 
-![Gambar 8 - Dummy Data Jadwal](images/jadwal-read.png)
+![Gambar 8 - Data Jadwal](images/jadwal-read.png)
 
 Dengan menampilkan keseluruhan data daei jadwal yang tersedia
 
@@ -321,7 +321,7 @@ Saat membuat pemesanan, pengguna terlebih dahulu memilih penumpang dari data yan
 
 > **Gambar 13. Proses Memilih Penumpang dan Jadwal**
 
-![Gambar 13 - Pilih Penumpang dan Jadwal](images/pemesanan-pilih-data.png)
+![Gambar 13 - Pilih Penumpang dan Jadwal](images/pemesanan-pilih.png)
 
 Pengguna memilih berdasarkan nomor urut sehingga tidak perlu menghafal ID penumpang maupun ID jadwal.
 
@@ -335,7 +335,7 @@ Setiap tiket kemudian dapat dipilih sebagai:
 
 > **Gambar 14. Pemilihan Jenis Tiket**
 
-![Gambar 14 - Pilih Jenis Tiket](images/pilih-jenis-tiket.png)
+![Gambar 14 - Pilih Jenis Tiket](images/jenis-tiket.png)
 
 Pada Tiket Reguler, program mencari kursi kosong pertama secara otomatis.
 
@@ -402,33 +402,7 @@ Dengan demikian, kursi yang sebelumnya digunakan dapat dipesan kembali oleh penu
 
 ---
 
-# 7. Alur Pencarian Tiket
-
-Pengguna dapat mencari tiket dengan memasukkan nomor tiket.
-
-Contoh:
-
-```text
-Nomor Tiket: TKT0002
-```
-
-Apabila tiket ditemukan, sistem menampilkan informasi tiket, penumpang, dan jadwal.
-
-> **Gambar 18. Hasil Pencarian Tiket**
-
-![Gambar 18 - Cari Tiket](images/cari-tiket.png)
-
-Jika nomor tiket tidak ditemukan, sistem menampilkan:
-
-```text
-Tiket tidak ditemukan.
-```
-
-Fitur ini menunjukkan bahwa nomor tiket yang dibuat otomatis juga berfungsi sebagai identitas untuk mencari tiket tertentu.
-
----
-
-# 8. Ringkasan dan Statistik Sistem
+# 7. Ringkasan dan Statistik Sistem
 
 Program menyediakan menu **Ringkasan Sistem** untuk menampilkan kondisi data dan hasil transaksi secara keseluruhan.
 
@@ -446,9 +420,9 @@ Informasi yang ditampilkan meliputi:
 
 Contoh:
 
-> **Gambar 19. Tampilan Ringkasan dan Statistik Sistem**
+> **Gambar 18. Tampilan Ringkasan dan Statistik Sistem**
 
-![Gambar 19 - Statistik Sistem](images/statistik-sistem.png)
+![Gambar 18 - Statistik Sistem](images/statistik-sistem.png)
 
 Nilai statistik dihitung berdasarkan data pemesanan dan tiket yang sedang tersimpan di dalam program, sehingga akan berubah mengikuti transaksi yang dilakukan.
 
@@ -476,9 +450,9 @@ Pilih menu: 9
 Input harus antara 0 sampai 5.
 ```
 
-> **Gambar 20. Validasi Input Menu**
+> **Gambar 19. Validasi Input Menu**
 
-![Gambar 20 - Validasi Menu](images/validasi-menu.png)
+![Gambar 19 - Validasi Menu](images/validasi-menu.png)
 
 ---
 
@@ -511,9 +485,11 @@ Beberapa validasi yang diterapkan adalah:
 - Kursi yang sudah digunakan tidak dapat dipilih kembali.
 - Jadwal yang sudah memiliki pemesanan tidak dapat langsung dihapus.
 
-> **Gambar 21. Contoh Validasi Data Program**
+> **Gambar 20. Contoh Salah Satu Validasi Data Program**
 
-![Gambar 21 - Validasi Data](images/validasi-data.png)
+![Gambar 20 - Validasi Data 1](images/validasi-data-1.png)
+![Gambar 20 - Validasi Data 2](images/validasi-data-2.png)
+![Gambar 20 - Validasi Data 3](images/validasi-data-3.png)
 
 Validasi dilakukan pada beberapa bagian agar data yang masuk tetap sesuai aturan program.
 
@@ -582,9 +558,9 @@ Inheritance diterapkan pada jenis tiket.
 
 Hierarki class yang digunakan adalah:
 
-> **Gambar 22. Hierarki Class Tiket**
+> **Gambar 21. Hierarki Class Tiket**
 
-![Gambar 22 - Hierarki Class Tiket](images/hierarki-tiket.png)
+![Gambar 21 - Hierarki Class Tiket](images/hierarki-tiket.png)
 
 `Tiket` berfungsi sebagai **superclass**, sedangkan `TiketReguler` dan `TiketPrioritas` merupakan **subclass**.
 
