@@ -10,6 +10,9 @@ import model.Penumpang;
 import model.JadwalShuttle;
 import model.Pemesanan;
 import model.Tiket;
+import model.Pembayaran;
+import model.PembayaranTunai;
+import model.PembayaranQRIS;
 
 /**
  *
@@ -72,7 +75,6 @@ public class ShuttleView {
     }
     
     private void splashScreen() {
-        bersihkanLayar();
         System.out.println("==========================================");
         System.out.println("              SHUTTLE APPS                ");
         System.out.println("==========================================");
@@ -178,7 +180,7 @@ public class ShuttleView {
 
     private void tambahPenumpang() {
         System.out.println("\nTAMBAH PENUMPANG");
-        String nama = inputTeks("Nama  : ", 3);
+        String nama = inputNama("Nama  : ");
         String noHp = inputNoHp("No HP : ");
         loading("Menyimpan data");
         controller.tambahPenumpang(nama, noHp);
@@ -186,7 +188,7 @@ public class ShuttleView {
 
     private void ubahPenumpang() {
         controller.tampilkanPenumpang();
-        String id = inputTeks("ID Penumpang yang diubah: ", 1);
+        String id = inputTeks("ID Penumpang yang diubah: ");
         Penumpang penumpang = controller.cariPenumpang(id);
 
         if (penumpang == null) {
@@ -194,14 +196,14 @@ public class ShuttleView {
             return;
         }
 
-        String nama = inputTeks("Nama baru  : ", 3);
+        String nama = inputNama("Nama baru  : ");
         String noHp = inputNoHp("No HP baru : ");
         controller.ubahPenumpang(id, nama, noHp);
     }
 
     private void hapusPenumpang() {
         controller.tampilkanPenumpang();
-        String id = inputTeks("ID Penumpang yang dihapus: ", 1);
+        String id = inputTeks("ID Penumpang yang dihapus: ");
         controller.hapusPenumpang(id);
     }
 
@@ -252,8 +254,8 @@ public class ShuttleView {
 
     private void tambahJadwal() {
         System.out.println("\nTAMBAH JADWAL");
-        String asal = inputTeks("Kota Asal      : ", 3);
-        String tujuan = inputTeks("Kota Tujuan    : ", 3);
+        String asal = inputNama("Kota Asal      : ");
+        String tujuan = inputNama("Kota Tujuan    : ");
         String jam = inputJam("Jam (HH:mm)    : ");
         double harga = inputDouble("Harga          : ", 10000);
         int kapasitas = inputInt("Kapasitas      : ", 1, 30);
@@ -263,15 +265,15 @@ public class ShuttleView {
 
     private void ubahJadwal() {
         controller.tampilkanJadwal();
-        String id = inputTeks("ID Jadwal yang diubah: ", 1);
+        String id = inputTeks("ID Jadwal yang diubah: ");
         JadwalShuttle jadwal = controller.cariJadwal(id);
 
         if (jadwal == null) {
             System.out.println("Jadwal tidak ditemukan.");
             return;
         }
-        String asal = inputTeks("Kota Asal baru   : ", 3);
-        String tujuan = inputTeks("Kota Tujuan baru : ", 3);
+        String asal = inputNama("Kota Asal baru   : ");
+        String tujuan = inputNama("Kota Tujuan baru : ");
         String jam = inputJam("Jam baru         : ");
         double harga = inputDouble("Harga baru       : ", 10000);
         int kapasitas = inputInt("Kapasitas baru   : ", 1, 30);
@@ -280,13 +282,13 @@ public class ShuttleView {
 
     private void hapusJadwal() {
         controller.tampilkanJadwal();
-        String id = inputTeks("ID Jadwal yang dihapus: ", 1);
+        String id = inputTeks("ID Jadwal yang dihapus: ");
         controller.hapusJadwal(id);
     }
 
     private void lihatKursi() {
         controller.tampilkanJadwal();
-        String id = inputTeks("ID Jadwal: ", 1);
+        String id = inputTeks("ID Jadwal: ");
 
         JadwalShuttle jadwal = controller.cariJadwal(id);
 
@@ -305,9 +307,10 @@ public class ShuttleView {
             System.out.println("MENU PEMESANAN");
             System.out.println("1. Buat Pemesanan");
             System.out.println("2. Tampilkan Pemesanan");
-            System.out.println("3. Batalkan Pemesanan");
+            System.out.println("3. Bayar Pemesanan");
+            System.out.println("4. Batalkan Pemesanan");
             System.out.println("0. Kembali");
-            pilihan = inputInt("Pilihan: ", 0, 3);
+            pilihan = inputInt("Pilihan: ", 0, 4);
 
             try {
                 switch (pilihan) {
@@ -320,6 +323,10 @@ public class ShuttleView {
                         break;
 
                     case 3:
+                        bayarPemesanan();
+                        break;
+
+                    case 4:
                         batalkanPemesanan();
                         break;
                 }
@@ -349,25 +356,26 @@ public class ShuttleView {
             Penumpang p = controller.getDaftarPenumpang().get(i);
             System.out.println((i + 1) + ". " + p.getNama());
         }
-
+        
         int pilihPenumpang = inputInt("Pilih penumpang: ", 1, controller.getDaftarPenumpang().size());
         Penumpang penumpang = controller.getDaftarPenumpang().get(pilihPenumpang - 1);
         System.out.println("\nPILIH JADWAL");
 
         for (int i = 0; i < controller.getDaftarJadwal().size(); i++) {
             JadwalShuttle j = controller.getDaftarJadwal().get(i);
-            System.out.println((i + 1) + ". " + j.getKotaAsal() + " -> " + j.getKotaTujuan() 
-                    + " | " + j.getJamBerangkat() + " | Sisa: " + j.getTiketTersedia());
+            System.out.println((i + 1) + ". " + j.getKotaAsal() + " -> " + j.getKotaTujuan() + " | " + j.getJamBerangkat() + " | Sisa: " + j.getTiketTersedia()
+            );
         }
 
         int pilihJadwal = inputInt("Pilih jadwal: ", 1, controller.getDaftarJadwal().size());
         JadwalShuttle jadwal = controller.getDaftarJadwal().get(pilihJadwal - 1);
 
         if (jadwal.getTiketTersedia() == 0) {
-            System.out.println("Tiket pada jadwal ini sudah habis.");
+            System.out.println(
+                    "Tiket pada jadwal ini sudah habis.");
             return;
         }
-        
+
         int maksimalTiket = Math.min(10, jadwal.getTiketTersedia());
         int jumlahTiket = inputInt("Jumlah tiket: ", 1, maksimalTiket);
         Pemesanan pemesanan = controller.buatPemesanan(penumpang, jadwal);
@@ -398,43 +406,61 @@ public class ShuttleView {
 
                     System.out.println("Kursi sudah terisi. " + "Pilih kursi lain.");
                 }
+
                 controller.buatTiketPrioritas(pemesanan, jadwal, nomorKursi);
             }
         }
 
         controller.simpanPemesanan(pemesanan);
-
         loading("Memproses pemesanan");
         System.out.println();
-        System.out.println("Pemesanan berhasil.");
+        System.out.println("==================================");
+        System.out.println("       PEMESANAN BERHASIL");
+        System.out.println("==================================");
         System.out.println("ID Pemesanan : " + pemesanan.getIdPemesanan());
         System.out.println("Jumlah Tiket : " + pemesanan.getJumlahTiket());
-        System.out.println("Total Harga  : Rp" + pemesanan.getTotalHarga());
-        System.out.println("\nNOMOR TIKET");
+        System.out.printf("Total Harga  : Rp%,.0f%n", pemesanan.getTotalHarga());
+        System.out.println("Pembayaran   : -");
+        System.out.println("Status       : BELUM DIBAYAR");
+        System.out.println();
+        System.out.println("NOMOR TIKET");
 
         for (Tiket tiket : pemesanan.getDaftarTiket()) {
             System.out.println(tiket.getNomorTiket() + " | " + tiket.getJenisTiket() + " | Kursi " + tiket.getNomorKursi());
         }
+
+        System.out.println("==================================");
+        System.out.println("Silakan lakukan pembayaran " + "melalui menu Bayar Pemesanan.");
     }
 
     private void batalkanPemesanan() {
         controller.tampilkanPemesanan();
-        String id = inputTeks("ID Pemesanan yang dibatalkan: ", 1);
+        String id = inputTeks("ID Pemesanan yang dibatalkan: ");
         controller.hapusPemesanan(id);
     }
 
     private void cariTiket() {
-        String nomor = inputTeks("Nomor Tiket: ", 1);
+        if (!controller.adaTiket()) {
+            System.out.println();
+            System.out.println("Belum ada tiket yang dapat dicari.");
+            System.out.println("Silakan buat pemesanan terlebih dahulu.");
+            return;
+        }
 
+        controller.tampilkanDaftarTiket();
+        System.out.println();
+        String nomor = inputTeks("Masukkan nomor tiket yang ingin dicari: ");
         Tiket tiket = controller.cariTiket(nomor);
 
         if (tiket == null) {
-            System.out.println("Tiket tidak ditemukan.");
+            System.out.println();
+            System.out.println("Tiket dengan nomor " + nomor.toUpperCase() + " tidak ditemukan.");
             return;
         }
 
         Penumpang penumpang = controller.cariPenumpang(tiket.getIdPenumpang());
         JadwalShuttle jadwal = controller.cariJadwal(tiket.getIdJadwal());
+        Pemesanan pemesanan = controller.cariPemesanan(tiket.getIdPemesanan());
         System.out.println();
         System.out.println("==================================");
         System.out.println("          TIKET SHUTTLE           ");
@@ -450,6 +476,9 @@ public class ShuttleView {
             System.out.println("Berangkat   : " + jadwal.getJamBerangkat());
         }
         
+        if (pemesanan != null) {
+            System.out.println("Status      : " + (pemesanan.isSudahDibayar() ? "LUNAS" : "BELUM DIBAYAR"));
+        }
         System.out.println("==================================");
     }
 
@@ -517,17 +546,22 @@ public class ShuttleView {
         }
     }
 
-    private String inputTeks(String pesan, int minimalKarakter) {
+    private String inputNama(String pesan) {
         while (true) {
             System.out.print(pesan);
-            String nilai = input.nextLine().trim();
+            String nama = input.nextLine().trim();
 
-            if (nilai.length() < minimalKarakter) {
-                System.out.println("Input minimal " + minimalKarakter + " karakter.");
+            if (nama.length() < 3) {
+                System.out.println("Nama minimal 3 karakter.");
                 continue;
             }
 
-            return nilai;
+            if (!nama.matches("[a-zA-Z ]+")) {
+                System.out.println("Nama hanya boleh berisi huruf dan spasi.");
+                continue;
+            }
+
+            return nama;
         }
     }
 
@@ -568,5 +602,78 @@ public class ShuttleView {
             Thread.currentThread().interrupt();
         }
         System.out.println();
+    }
+    
+    private String inputTeks(String pesan) {
+        while (true) {
+            System.out.print(pesan);
+            String nilai = input.nextLine().trim();
+
+            if (nilai.isEmpty()) {
+                System.out.println("Input tidak boleh kosong.");
+                continue;
+            }
+
+            return nilai;
+        }
+    }
+    
+    private void bayarPemesanan() {
+        if (controller.getDaftarPemesanan().isEmpty()) {
+            System.out.println(
+                    "Belum ada pemesanan yang dapat dibayar.");
+            return;
+        }
+
+        controller.tampilkanPemesanan();
+
+        String id = inputTeks(
+                "ID Pemesanan yang akan dibayar: ");
+
+        Pemesanan pemesanan =
+                controller.cariPemesanan(id);
+
+        if (pemesanan == null) {
+            System.out.println("Pemesanan tidak ditemukan.");
+            return;
+        }
+
+        if (pemesanan.isSudahDibayar()) {
+            System.out.println(
+                    "Pemesanan tersebut sudah dibayar.");
+            return;
+        }
+
+        System.out.println();
+        System.out.println("TOTAL PEMBAYARAN");
+        System.out.println(
+                "Rp" + pemesanan.getTotalHarga());
+
+        System.out.println();
+        System.out.println("METODE PEMBAYARAN");
+        System.out.println("1. Tunai");
+        System.out.println("2. QRIS");
+
+        int pilihan =
+                inputInt("Pilih metode pembayaran: ", 1, 2);
+
+        Pembayaran pembayaran;
+
+        if (pilihan == 1) {
+            pembayaran = new PembayaranTunai();
+        } else {
+            pembayaran = new PembayaranQRIS();
+        }
+
+        loading("Memproses pembayaran");
+
+        controller.bayarPemesanan(id, pembayaran);
+
+        System.out.println();
+        System.out.println("Pembayaran berhasil.");
+        System.out.println(
+                "Metode : "
+                + pembayaran.getMetodePembayaran());
+        System.out.println("Status : LUNAS");
     }
 }

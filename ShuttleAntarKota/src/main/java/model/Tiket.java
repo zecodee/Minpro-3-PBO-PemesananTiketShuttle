@@ -8,7 +8,7 @@ package model;
  *
  * @author zefrialrizkullah
  */
-public class Tiket {
+public abstract class Tiket {
     private final String nomorTiket;
     private final String idPemesanan;
     private final String idPenumpang;
@@ -49,13 +49,9 @@ public class Tiket {
         return hargaDasar;
     }
 
-    public String getJenisTiket() {
-        return "Tiket";
-    }
+    public abstract String getJenisTiket();
 
-    public double hitungHarga() {
-        return hargaDasar;
-    }
+    public abstract double hitungHarga();
 
     public void tampilkanTiket() {
         System.out.println("Nomor Tiket : " + nomorTiket);

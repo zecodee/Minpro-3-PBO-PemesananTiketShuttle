@@ -1,6 +1,6 @@
-# Sistem Shuttle Antar Kota
+# Sistem Shuttle Antar Kota PLAT KT
 
-**Mini Project 2**  
+**Mini Project 3**  
 **Praktikum Pemrograman Berorientasi Objek**
 
 **Nama:** Zefri Al Rizqullah  
@@ -10,22 +10,28 @@
 
 #### 1. Deskripsi Singkat Program
 
-**Sistem Shuttle Antar Kota** merupakan program berbasis Java CLI (Command Line Interface) yang dirancang untuk mengelola proses layanan shuttle antar kota, mulai dari pengelolaan data penumpang, jadwal perjalanan, pemesanan, hingga tiket perjalanan.
+**Sistem Shuttle Antar Kota PLAT KT** merupakan program berbasis Java CLI (Command Line Interface) yang dirancang untuk mengelola layanan shuttle antar kota, mulai dari pengelolaan data penumpang, jadwal perjalanan, pemesanan tiket, pembayaran, pencarian tiket, hingga penyajian statistik transaksi.
 
-Program memiliki tiga proses pengelolaan utama, yaitu data penumpang, jadwal shuttle, dan pemesanan. Penumpang dan jadwal dapat ditambah, ditampilkan, diubah, serta dihapus. Setiap data memiliki ID yang dibuat secara otomatis oleh sistem sehingga pengguna tidak perlu menentukan ID secara manual.
+Program memiliki tiga proses pengelolaan utama, yaitu data penumpang, jadwal shuttle, dan pemesanan. Data penumpang dan jadwal dapat ditambah, ditampilkan, diubah, serta dihapus. Setiap data memiliki ID yang dibuat secara otomatis oleh sistem sehingga pengguna tidak perlu menentukan ID secara manual.
 
-Pada proses pemesanan, pengguna memilih penumpang dan jadwal yang tersedia, menentukan jumlah tiket, kemudian memilih jenis Tiket Reguler atau Tiket Prioritas. Tiket Reguler mendapatkan kursi yang ditentukan otomatis oleh sistem, sedangkan Tiket Prioritas memungkinkan pengguna memilih sendiri kursi yang masih tersedia dengan tambahan biaya Rp25.000. Dalam konsep layanan nyata, tiket prioritas juga dapat menggambarkan layanan dengan benefit tambahan seperti lunch/snack, priority boarding, atau fasilitas khusus lainnya.
+Pada proses pemesanan, pengguna memilih penumpang dan jadwal yang tersedia, menentukan jumlah tiket, kemudian memilih **Tiket Reguler** atau **Tiket Prioritas**. Tiket Reguler mendapatkan kursi yang ditentukan otomatis oleh sistem, sedangkan Tiket Prioritas memberikan kebebasan kepada pengguna untuk memilih kursi yang masih tersedia dengan tambahan biaya sebesar Rp25.000.
 
-Setiap tiket yang berhasil dibuat memiliki nomor tiket unik dan terhubung dengan data penumpang, pemesanan, jadwal, serta nomor kursi. Kursi yang telah dipesan akan ditandai sebagai terisi dan tidak dapat digunakan oleh tiket lain. Jika pemesanan dibatalkan, kursi tersebut akan otomatis tersedia kembali.
+Setiap tiket memiliki nomor tiket unik dan terhubung dengan pemesanan, penumpang, jadwal, serta nomor kursi. Kursi yang telah digunakan akan ditandai sebagai terisi sehingga tidak dapat digunakan oleh tiket lainnya.
 
-Program juga menyediakan fitur pencarian tiket berdasarkan nomor tiket serta ringkasan statistik untuk melihat jumlah penumpang, jadwal, pemesanan, tiket Reguler dan Prioritas yang terjual, hingga total pendapatan. Pada awal program tersedia **dummy data** agar data dapat langsung ditampilkan tanpa harus melakukan input terlebih dahulu.
+Proses pemesanan dan pembayaran dibuat secara terpisah. Setelah pemesanan berhasil dibuat, status awal pemesanan adalah **BELUM DIBAYAR**. Pengguna kemudian dapat memilih menu **Bayar Pemesanan** dan melakukan pembayaran menggunakan metode **Tunai** atau **QRIS**. Setelah proses pembayaran berhasil, status pemesanan berubah menjadi **LUNAS**.
 
-Seluruh data selama program berjalan dikelola menggunakan `ArrayList`. Program menggunakan struktur MVC (Model-View-Controller) untuk memisahkan pengelolaan data, proses program, dan tampilan. Selain itu, program menerapkan konsep encapsulation, inheritance, polymorphism, access modifier, validasi input, serta dilengkapi splash screen dan animasi loading agar tampilan program lebih terstruktur dan interaktif.
+Pemesanan yang belum dibayar masih dapat dibatalkan. Ketika pemesanan dibatalkan, kursi yang digunakan akan dikembalikan menjadi tersedia. Sedangkan pemesanan yang sudah berstatus LUNAS tidak dapat dibatalkan melalui proses pembatalan biasa.
 
-Secara sederhana, konsep kerja program dapat digambarkan sebagai berikut:
+Program juga menyediakan fitur pencarian tiket berdasarkan nomor tiket serta ringkasan statistik untuk melihat jumlah penumpang, jadwal, pemesanan, tiket yang telah terjual, jenis tiket, dan pendapatan. Data penjualan dan pendapatan dihitung berdasarkan transaksi yang telah berhasil dibayar.
+
+Seluruh data selama program berjalan dikelola menggunakan `ArrayList`. Program menggunakan struktur **MVC (Model-View-Controller)** dan menerapkan konsep **encapsulation, inheritance, abstraction, polymorphism, access modifier, validasi input**, serta **interface** untuk menyediakan beberapa metode pembayaran.
+
+Program juga dilengkapi splash screen, loading animation, ID otomatis, nomor tiket otomatis, pengelolaan kursi, dan dummy data awal agar penggunaan program lebih terstruktur dan interaktif.
+
+Secara sederhana, alur utama program adalah:
 
 ```text
-Kelola Penumpang & Jadwal --> Buat Pemesanan --> Pilih Reguler / Prioritas --> Sistem Menentukan/Memilih Kursi --> Nomor Tiket Dibuat Otomatis --> Pemesanan Disimpan --> Cari Tiket & Lihat Statistik
+Kelola Penumpang & Jadwal --> Buat Pemesanan --> Pilih Reguler / Prioritas --> Sistem Menentukan/Memilih Kursi -->  Pemesanan Disimpan --> Status BELUM DIBAYAR --> Bayar Pemesanan --> Tunai / QRIS --> Status LUNAS --> Cari Tiket & Lihat Statistik
 ```
 
 ---
@@ -47,30 +53,34 @@ Struktur tersebut membagi program menjadi beberapa bagian berikut.
 Package `model` berisi class yang digunakan untuk menyimpan dan mengatur data utama program.
 
 Class yang terdapat di dalamnya adalah:
+- `Penumpang` untuk menyimpan data penumpang.
+- `JadwalShuttle` untuk mengelola data jadwal, harga, kapasitas, dan ketersediaan kursi.
+- `Pemesanan` untuk menyimpan transaksi pemesanan, daftar tiket, metode pembayaran, dan status pembayaran.
+- `Tiket` sebagai **abstract superclass** untuk seluruh jenis tiket.
+- `TiketReguler` sebagai subclass untuk tiket reguler.
+- `TiketPrioritas` sebagai subclass untuk tiket prioritas.
+- `Pembayaran` sebagai **interface** yang menentukan kontrak metode pembayaran.
+- `PembayaranTunai` sebagai implementasi pembayaran menggunakan tunai.
+- `PembayaranQRIS` sebagai implementasi pembayaran menggunakan QRIS.
 
-- `Penumpang` untuk data penumpang.
-- `JadwalShuttle` untuk data jadwal, harga, kapasitas, dan kursi.
-- `Pemesanan` untuk data transaksi pemesanan.
-- `Tiket` sebagai superclass tiket.
-- `TiketReguler` sebagai jenis tiket reguler.
-- `TiketPrioritas` sebagai jenis tiket prioritas.
-
-Pada bagian ini juga terdapat aturan dan validasi yang berkaitan langsung dengan data, seperti validasi nama, nomor HP, harga, jam keberangkatan, kapasitas, dan ketersediaan kursi.
+Package `model` juga menangani beberapa aturan bisnis seperti perhitungan harga tiket, ketersediaan kursi, status pembayaran, serta proses pembayaran.
 
 ### 2.2 Package `controller`
 
-Package `controller` berisi `ShuttleController`.
+Package `controller` berisi class `ShuttleController` yang menjadi penghubung antara View dengan Model.
 
-Controller menjadi penghubung antara tampilan dan data. Bagian ini menangani proses utama seperti:
+Controller menangani proses seperti:
 
-- Menambah, mencari, mengubah, dan menghapus data.
-- Membuat ID secara otomatis.
-- Membuat nomor tiket secara otomatis.
+- Menambah, mencari, mengubah, dan menghapus data penumpang serta jadwal.
+- Membuat ID penumpang, jadwal, pemesanan, dan nomor tiket secara otomatis.
 - Membuat pemesanan.
-- Membuat Tiket Reguler dan Prioritas.
-- Mengisi dan mengembalikan kursi.
-- Menghitung jumlah tiket.
-- Menghitung statistik dan pendapatan.
+- Membuat Tiket Reguler dan Tiket Prioritas.
+- Mengatur penggunaan dan pengembalian kursi.
+- Mencari data pemesanan dan tiket.
+- Memproses pembayaran pemesanan melalui interface `Pembayaran`.
+- Menghitung tiket yang telah terjual.
+- Menghitung pendapatan berdasarkan pemesanan yang sudah dibayar.
+- Menyediakan data statistik untuk ditampilkan oleh View.
 
 ### 2.3 Package `view`
 
@@ -373,32 +383,54 @@ Total harga tidak disimpan sebagai angka tetap. Program menghitungnya dari selur
 
 ## 6.4 Menampilkan Data Pemesanan
 
-Menu tampil pemesanan menampilkan informasi pemesanan beserta tiket yang dimiliki.
+Menu tampil pemesanan menampilkan informasi pemesanan beserta tiket yang dimiliki, serta juga menampilkan status pembayaran.
 
 > **Gambar 16. Tampilan Data Pemesanan**
 
 ![Gambar 16 - Data Pemesanan](images/pemesanan-read.png)
 
-Satu pemesanan dapat memiliki beberapa object `Tiket` yang disimpan dalam `ArrayList<Tiket>`.
+Satu pemesanan dapat memiliki beberapa object `Tiket`.
 
 ---
 
-## 6.5 Membatalkan Pemesanan
+## 6.5 Melakukan Pembayaran Pemesanan
 
-Pemesanan dapat dibatalkan berdasarkan ID pemesanan.
+Pembayaran dilakukan secara terpisah setelah pemesanan berhasil dibuat.
 
-Ketika pemesanan dibatalkan:
+> **Gambar 17. Proses Pembayaran QRIS**
 
-1. Program mencari pemesanan.
-2. Program mencari jadwal yang digunakan.
-3. Seluruh kursi dari tiket pada pemesanan dikosongkan kembali.
-4. Pemesanan dihapus dari `ArrayList`.
+![Gambar 17 - Proses Pembayaran QRIS](images/proses-bayar-qris.png)
 
-> **Gambar 17. Proses Pembatalan Pemesanan**
+Proses ketika pengguna memilih pembayaran dan memperoleh informasi bahwa pembayaran berhasil dengan menggunakan metode QRIS.
 
-![Gambar 17 - Batalkan Pemesanan](images/pemesanan-delete.png)
+> **Gambar 18. Proses Pembayaran Tunai**
 
-Dengan demikian, kursi yang sebelumnya digunakan dapat dipesan kembali oleh penumpang lain.
+![Gambar 18 - Proses Pembayaran Tunai](images/proses-bayar-tunai.png)
+
+Proses ketika pengguna memilih pembayaran dan memperoleh informasi bahwa pembayaran berhasil dengan menggunakan metode Tunai.
+
+---
+
+## 6.6 Membatalkan Pemesanan
+
+Pemesanan dapat dibatalkan berdasarkan ID pemesanan selama transaksi tersebut **belum dibayar**.
+
+Ketika pengguna melakukan pembatalan, program menjalankan beberapa proses:
+
+1. Mencari pemesanan berdasarkan ID.
+2. Memastikan pemesanan ditemukan.
+3. Memeriksa status pembayaran.
+4. Mencari jadwal yang digunakan oleh pemesanan.
+5. Mengembalikan seluruh kursi dari tiket menjadi tersedia.
+6. Menghapus pemesanan dari `ArrayList`.
+
+Jika pemesanan sudah dibayar, sistem akan menolak pembatalan pemesanan.
+
+> **Gambar 19. Proses Pembatalan Pemesanan**
+
+![Gambar 19 - Batalkan Pemesanan](images/pemesanan-delete.png)
+
+Dengan itu, kursi yang sebelumnya digunakan dapat dipesan kembali oleh penumpang lain.
 
 ---
 
@@ -420,11 +452,27 @@ Informasi yang ditampilkan meliputi:
 
 Contoh:
 
-> **Gambar 18. Tampilan Ringkasan dan Statistik Sistem**
+> **Gambar 20. Tampilan Ringkasan dan Statistik Sistem**
 
-![Gambar 18 - Statistik Sistem](images/statistik-sistem.png)
+![Gambar 20 - Statistik Sistem](images/statistik-sistem.png)
 
-Nilai statistik dihitung berdasarkan data pemesanan dan tiket yang sedang tersimpan di dalam program, sehingga akan berubah mengikuti transaksi yang dilakukan.
+Nilai statistik akan berubah mengikuti data dan transaksi yang dilakukan pada program. Khusus untuk **Total Tiket Terjual, Tiket Reguler, Tiket Prioritas, dan Pendapatan**, perhitungan hanya dilakukan terhadap pemesanan yang telah berstatus **LUNAS**. Pemesanan yang masih berstatus **BELUM DIBAYAR** belum dianggap sebagai transaksi penjualan yang selesai.
+
+---
+
+# 8. Pencarian Tiket
+
+Menu **Cari Tiket** digunakan untuk mencari dan melihat informasi lengkap dari tiket yang telah dibuat pada proses pemesanan.
+
+Ketika menu Cari Tiket dipilih, program terlebih dahulu menampilkan **daftar tiket yang tersedia**. Daftar tersebut berisi nomor tiket, nama penumpang, rute perjalanan, dan jam keberangkatan.
+
+> **Gambar 21. Tampilan Pencarian Tiket**
+
+![Gambar 21 - Tampilan Pencarian Tiket](images/cari-tiket.png)
+
+Apabila nomor tiket yang dimasukkan tidak ditemukan, program akan memberikan informasi bahwa tiket tersebut tidak tersedia. Sedangkan jika belum terdapat tiket yang dapat dicari, program akan meminta pengguna membuat pemesanan terlebih dahulu.
+
+Fitur ini mempermudah pengguna dalam mengetahui tiket yang tersedia dan melihat informasi tiket secara lengkap tanpa harus membuka seluruh data pemesanan.
 
 ---
 
@@ -450,9 +498,9 @@ Pilih menu: 9
 Input harus antara 0 sampai 5.
 ```
 
-> **Gambar 19. Validasi Input Menu**
+> **Gambar 22. Validasi Input Menu**
 
-![Gambar 19 - Validasi Menu](images/validasi-menu.png)
+![Gambar 22 - Validasi Menu](images/validasi-menu.png)
 
 ---
 
@@ -485,11 +533,11 @@ Beberapa validasi yang diterapkan adalah:
 - Kursi yang sudah digunakan tidak dapat dipilih kembali.
 - Jadwal yang sudah memiliki pemesanan tidak dapat langsung dihapus.
 
-> **Gambar 20. Contoh Salah Satu Validasi Data Program**
+> **Gambar 23. Contoh Salah Satu Validasi Data Program**
 
-![Gambar 20 - Validasi Data 1](images/validasi-data-1.png)
-![Gambar 20 - Validasi Data 2](images/validasi-data-2.png)
-![Gambar 20 - Validasi Data 3](images/validasi-data-3.png)
+![Gambar 23 - Validasi Data 1](images/validasi-data-1.png)
+![Gambar 23 - Validasi Data 2](images/validasi-data-2.png)
+![Gambar 23 - Validasi Data 3](images/validasi-data-3.png)
 
 Validasi dilakukan pada beberapa bagian agar data yang masuk tetap sesuai aturan program.
 
@@ -518,21 +566,16 @@ public String getNama() {
 Sedangkan data yang dapat diubah menggunakan setter:
 
 ```java
-public void setNama(String nama) {
-    if (nama == null || nama.trim().isEmpty()) {
-        throw new IllegalArgumentException(
-                "Nama tidak boleh kosong."
-        );
-    }
+    public void setNama(String nama) {
+        if (nama == null || nama.trim().isEmpty()) {
+            throw new IllegalArgumentException("Nama tidak boleh kosong.");
+        }
 
-    if (nama.trim().length() < 3) {
-        throw new IllegalArgumentException(
-                "Nama minimal 3 karakter."
-        );
+        if (nama.trim().length() < 3) {
+            throw new IllegalArgumentException("Nama minimal 3 karakter.");
+        }
+        this.nama = nama.trim();
     }
-
-    this.nama = nama.trim();
-}
 ```
 
 Setter tidak hanya digunakan untuk mengubah data, tetapi juga menjadi tempat validasi sebelum nilai disimpan ke atribut.
@@ -554,13 +597,13 @@ Dengan penerapan ini, data object lebih terlindungi karena perubahan dilakukan m
 
 # 11. Penerapan Inheritance
 
-Inheritance diterapkan pada jenis tiket.
+Inheritance diterapkan pada pengelompokan jenis tiket. Program memiliki `Tiket` sebagai **abstract superclass**, sedangkan `TiketReguler` dan `TiketPrioritas` menjadi subclass.
 
-Hierarki class yang digunakan adalah:
+Hubungannya dapat digambarkan sebagai berikut:
 
-> **Gambar 21. Hierarki Class Tiket**
+> **Gambar 24. Hierarki Class Tiket**
 
-![Gambar 21 - Hierarki Class Tiket](images/hierarki-tiket.png)
+![Gambar 24 - Hierarki Class Tiket](images/hierarki-tiket.png)
 
 `Tiket` berfungsi sebagai **superclass**, sedangkan `TiketReguler` dan `TiketPrioritas` merupakan **subclass**.
 
@@ -595,9 +638,13 @@ Perbedaan perilaku kemudian ditempatkan pada masing-masing subclass.
 
 # 12. Penerapan Polymorphism
 
-Polymorphism menjadi salah satu nilai tambah pada program dan diterapkan.
+Polymorphism diterapkan ketika satu tipe referensi dapat digunakan untuk menangani object yang berbeda dan menjalankan perilaku sesuai object sebenarnya.
 
-Pemesanan menyimpan tiket menggunakan:
+Pada program Sistem Shuttle Antar Kota, polymorphism dapat terlihat pada dua bagian, yaitu **jenis tiket** dan **metode pembayaran**.
+
+## 12.1 Polymorphism pada Tiket
+
+Class `Pemesanan` menyimpan seluruh tiket menggunakan:
 
 ```java
 private ArrayList<Tiket> daftarTiket;
@@ -660,6 +707,46 @@ Total Harga   : Rp175.000
 
 Ini menunjukkan bahwa object dengan superclass yang sama dapat mempunyai perilaku berbeda sesuai subclass-nya.
 
+## 12.2 Polymorphism pada Pembayaran
+
+Polymorphism pada pembayaran diterapkan agar program dapat menggunakan **lebih dari satu jenis metode pembayaran melalui satu tipe yang sama**, yaitu interface `Pembayaran`.
+
+Pada program ini terdapat dua metode pembayaran:
+
+- `PembayaranTunai`
+- `PembayaranQRIS`
+
+Kedua class tersebut memiliki cara pembayaran yang berbeda, tetapi sama-sama mengikuti aturan dari interface `Pembayaran`.
+
+Interface `Pembayaran` memiliki method:
+
+```java
+public interface Pembayaran {
+    boolean prosesPembayaran(double totalBayar);
+    String getMetodePembayaran();
+}
+```
+
+Artinya, setiap class yang menggunakan:
+
+```java
+implements Pembayaran
+```
+
+harus memiliki method `prosesPembayaran()` dan `getMetodePembayaran()`.
+
+Contohnya pada pembayaran Tunai:
+
+```java
+public class PembayaranTunai implements Pembayaran
+```
+
+dan pembayaran QRIS:
+
+```java
+public class PembayaranQRIS implements Pembayaran
+```
+
 ---
 
 # 13. Penerapan Access Modifier
@@ -708,27 +795,14 @@ isiDummyData();
 Method tersebut langsung memasukkan satu penumpang dan satu jadwal awal.
 
 ```java
-Penumpang penumpang = new Penumpang(
-        buatIdPenumpang(),
-        "Zeyya Alvyoza",
-        "081316120091"
-);
-
+Penumpang penumpang = new Penumpang(buatIdPenumpang(), "Zeyya Alvyoza", "081316120091");
 daftarPenumpang.add(penumpang);
 ```
 
 dan:
 
 ```java
-JadwalShuttle jadwal = new JadwalShuttle(
-        buatIdJadwal(),
-        "Samarinda",
-        "Balikpapan",
-        "08:00",
-        150000,
-        10
-);
-
+JadwalShuttle jadwal = new JadwalShuttle(buatIdJadwal(), "Samarinda", "Balikpapan", "08:00", 150000, 10);
 daftarJadwal.add(jadwal);
 ```
 
@@ -736,63 +810,133 @@ Tujuannya agar ketika fitur Tampilkan Data pertama kali dijalankan, program suda
 
 ---
 
-# 15. Penerapan Nilai Tambah
+# 15. Penerapan Abstraction
 
-## 15.1 Struktur MVC
+Abstraction diterapkan pada class `Tiket`.
 
-Program menerapkan struktur MVC dengan pemisahan:
-
-```text
-Model      --> menyimpan dan mengatur data
-View       --> menampilkan program dan menerima input
-Controller --> mengatur proses dan menghubungkan View dengan Model
-Main       --> tempat dimana program utama dijalankan
-```
-
-Pemisahan tersebut membuat kode lebih terstruktur dibandingkan menempatkan seluruh proses di dalam `Main.java`.
-
----
-
-## 15.2 Polymorphism
-
-Polymorphism diterapkan melalui superclass `Tiket` dan subclass `TiketReguler` serta `TiketPrioritas`.
-
-Method seperti:
+Class `Tiket` dibuat menggunakan keyword `abstract`:
 
 ```java
-getJenisTiket()
-hitungHarga()
-tampilkanTiket()
+public abstract class Tiket
 ```
 
-dapat memberikan hasil berbeda sesuai jenis object tiket yang sedang digunakan.
+Class tersebut digunakan sebagai gambaran umum dari sebuah tiket. Program tidak membuat object Tiket secara langsung karena setiap tiket yang digunakan harus mempunyai jenis yang jelas, yaitu Reguler atau Prioritas.
 
----
-
-## 15.3 Splash Screen dan Loading
-
-Program memiliki splash screen saat pertama kali dijalankan.
-
-Animasi loading dibuat menggunakan:
+Selain abstract class, program juga menerapkan abstract method:
 
 ```java
-for (int i = 0; i < 20; i++) {
-    System.out.print("#");
-    Thread.sleep(80);
+public abstract String getJenisTiket();
+public abstract double hitungHarga();
+```
+
+Method tersebut tidak memiliki implementasi di dalam class Tiket. Class Tiket hanya menentukan bahwa setiap subclass wajib mampu menentukan jenis tiket dan menghitung harga tiketnya sendiri. Implementasi sebenarnya diberikan pada masing-masing dari subclass tersebutt.
+
+Pada TiketReguler:
+
+```java
+@Override
+public String getJenisTiket() {
+    return "Reguler";
+}
+
+@Override
+public double hitungHarga() {
+    return getHargaDasar();
 }
 ```
 
-Sedangkan efek teks `System Ready!` dibuat dengan menampilkan karakter satu per satu menggunakan `charAt()` dan `Thread.sleep()`.
+pada TiketPrioritas:
 
-Fitur ini tidak memengaruhi proses utama program, tetapi membuat tampilan CLI lebih interaktif.
+```java
+@Override
+public String getJenisTiket() {
+    return "Prioritas";
+}
+
+@Override
+public double hitungHarga() {
+    return getHargaDasar() + biayaPrioritas;
+}
+```
+
+Dengan abstraction, program menentukan apa yang harus dapat dilakukan oleh sebuah tiket melalui abstract method, sedangkan bagaimana cara melakukannya ditentukan oleh masing-masing subclass.
 
 ---
 
-## 16. Kesimpulan
-**Sistem Shuttle Antar Kota** berhasil dibuat sebagai program berbasis Java CLI yang dapat mengelola proses layanan shuttle secara terstruktur, mulai dari pengelolaan data penumpang dan jadwal, pemesanan tiket, pengaturan ketersediaan kursi, pencarian tiket, hingga penyajian statistik sistem.
+# 16. Penerapan Nilai Tambah
 
-Program mampu menghubungkan setiap proses yang ada. Penumpang dapat memilih jadwal yang tersedia dan melakukan pemesanan menggunakan Tiket Reguler atau Tiket Prioritas. Setiap pemesanan menghasilkan nomor tiket dan nomor kursi yang dikelola secara otomatis. Kursi yang telah digunakan tidak dapat dipilih kembali, sedangkan pembatalan pemesanan akan mengembalikan kursi menjadi tersedia. Data transaksi tersebut juga digunakan untuk menghasilkan informasi jumlah tiket yang terjual dan total pendapatan pada ringkasan sistem.
+## 15.1 Interface Pembayaran
 
-Dari sisi struktur program, penggunaan **MVC** membuat pengelolaan data, proses, dan tampilan lebih terpisah dan terorganisir. Penerapan encapsulation, inheritance, polymorphism, access modifier, ArrayList, serta validasi input juga membuat program memiliki struktur OOP yang lebih jelas serta membantu menjaga data dan proses agar berjalan sesuai aturan yang telah ditentukan.
+Nilai tambah utama yang diterapkan pada program adalah penggunaan **interface** untuk menangani beberapa metode pembayaran.
 
-Secara keseluruhan, hasil akhir program tidak hanya mampu menjalankan fungsi pengelolaan data dan pemesanan shuttle, tetapi juga membentuk sebuah sistem sederhana yang saling terintegrasi antara penumpang, jadwal, pemesanan, tiket, kursi, dan statistik. Penambahan splash screen, loading, ID otomatis, dua jenis tiket, serta pengelolaan kursi membuat program lebih interaktif dan memberikan gambaran yang lebih nyata mengenai proses layanan shuttle antar kota.
+Program memiliki interface:
+
+```java
+public interface Pembayaran {
+    boolean prosesPembayaran(double totalBayar);
+    String getMetodePembayaran();
+}
+```
+
+Interface Pembayaran berfungsi sebagai sebuah kontrak. Artinya, setiap class yang ingin digunakan sebagai metode pembayaran wajib menyediakan implementasi untuk `prosesPembayaran()` dan `getMetodePembayaran()`.
+
+Pada program ini terdapat dua implementasi interface, yaitu pada class PembayaranQRIS dan class PembayaranTunai.
+
+```java
+public class PembayaranTunai implements Pembayaran
+dan
+public class PembayaranQRIS implements Pembayaran
+```
+
+Dengan PembayaranTunai mengimplementasikan:
+```java
+@Override
+public boolean prosesPembayaran(double totalBayar) {
+    System.out.println("Pembayaran tunai.");
+    return true;
+}
+
+@Override
+public String getMetodePembayaran() {
+    return "Tunai";
+}
+```
+
+Dengan PembayaranQRIS mengimplementasikan:
+```java
+@Override
+public boolean prosesPembayaran(double totalBayar) {
+    System.out.println("Pembayaran QRIS.");
+    return true;
+}
+
+@Override
+public String getMetodePembayaran() {
+    return "QRIS";
+}
+```
+
+ Dengan demikian, interface digunakan untuk menyatukan beberapa metode pembayaran yang berbeda ke dalam satu aturan yang sama.
+
+---
+
+# 17. Kesimpulan
+**Sistem Shuttle Antar Kota PLAT KT** berhasil dikembangkan sebagai program yang dapat mengelola data penumpang, jadwal shuttle, pemesanan tiket, ketersediaan kursi, pembayaran, pencarian tiket, serta statistik transaksi dalam satu sistem yang saling terhubung.
+
+Pada proses pemesanan, pengguna dapat memilih Tiket Reguler atau Tiket Prioritas. Tiket Reguler menggunakan harga dasar dan mendapatkan kursi secara otomatis, sedangkan Tiket Prioritas memberikan kebebasan memilih kursi dengan tambahan biaya. Setiap tiket memiliki nomor tiket unik dan kursi yang sudah digunakan tidak dapat digunakan kembali oleh tiket lainnya.
+
+Proses pemesanan dan pembayaran dibuat secara terpisah. Pemesanan yang baru dibuat memiliki status **BELUM DIBAYAR**. Pengguna kemudian dapat melakukan pembayaran menggunakan metode **Tunai** atau **QRIS** melalui menu Bayar Pemesanan. Setelah pembayaran berhasil, status pemesanan berubah menjadi **LUNAS**. Data transaksi yang sudah dibayar kemudian digunakan dalam perhitungan penjualan tiket dan pendapatan pada Ringkasan Sistem.
+
+Program ini menerapkan **encapsulation** melalui penggunaan atribut `private`, getter, setter, serta method yang mengontrol perubahan data. **Inheritance** diterapkan melalui hubungan antara abstract superclass `Tiket` dengan subclass `TiketReguler` dan `TiketPrioritas`.
+
+Konsep **abstraction** diterapkan dengan menjadikan `Tiket` sebagai abstract class serta menggunakan abstract method `getJenisTiket()` dan `hitungHarga()`. Setiap subclass kemudian wajib menyediakan implementasi dari method tersebut sesuai karakteristik jenis tiketnya.
+
+**Polymorphism** diterapkan ketika referensi bertipe `Tiket` dapat menangani object `TiketReguler` maupun `TiketPrioritas`. Polymorphism juga terdapat pada pembayaran ketika referensi bertipe `Pembayaran` dapat menangani object `PembayaranTunai` maupun `PembayaranQRIS`.
+
+Program menggunakan struktur **MVC (Model-View-Controller)** untuk memisahkan data dan aturan object pada Model, proses utama pada Controller, interaksi pengguna pada View, serta entry point pada package App.
+
+Sebagai nilai tambah, program menerapkan **interface `Pembayaran`** sebagai kontrak untuk beberapa metode pembayaran. Dengan konsep tersebut, metode pembayaran dapat dikembangkan tanpa membuat class `Pemesanan` bergantung pada satu jenis pembayaran tertentu.
+
+Selain itu, penggunaan `ArrayList`, dummy data, validasi input, ID otomatis, nomor tiket otomatis, pengelolaan kursi, splash screen, dan loading animation membuat program lebih terstruktur, aman terhadap input yang tidak sesuai, dan lebih interaktif ketika digunakan.
+
+Secara keseluruhan, program tidak hanya menjalankan fungsi pengelolaan layanan shuttle, tetapi juga menunjukkan bagaimana konsep-konsep Pemrograman Berorientasi Objek dapat diterapkan secara saling berhubungan dalam sebuah studi kasus sederhana.

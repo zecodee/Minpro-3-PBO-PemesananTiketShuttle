@@ -15,8 +15,8 @@ public class Penumpang {
     
     public Penumpang(String idPenumpang, String nama, String noHp) {
         this.idPenumpang    = idPenumpang;
-        this.nama           = nama;
-        this.noHp           = noHp;
+        setNama(nama);
+        setNoHp(noHp);
     }
     public String getIdPenumpang() {
         return idPenumpang;
@@ -37,6 +37,12 @@ public class Penumpang {
         if (nama.trim().length() < 3) {
             throw new IllegalArgumentException("Nama minimal 3 karakter.");
         }
+
+        if (!nama.trim().matches("[a-zA-Z ]+")) {
+            throw new IllegalArgumentException(
+                    "Nama hanya boleh berisi huruf dan spasi.");
+        }
+
         this.nama = nama.trim();
     }
     

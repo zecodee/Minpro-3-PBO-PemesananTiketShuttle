@@ -61,12 +61,21 @@ public class JadwalShuttle {
     }
 
     public void setRute(String kotaAsal, String kotaTujuan) {
-        if (kotaAsal == null || kotaAsal.trim().isEmpty() || kotaTujuan == null || kotaTujuan.trim().isEmpty()) {
-            throw new IllegalArgumentException("Kota asal dan tujuan tidak boleh kosong.");
+        if (kotaAsal == null || kotaAsal.trim().isEmpty()
+                || kotaTujuan == null || kotaTujuan.trim().isEmpty()) {
+            throw new IllegalArgumentException(
+                    "Kota asal dan tujuan tidak boleh kosong.");
+        }
+
+        if (!kotaAsal.trim().matches("[a-zA-Z ]+")
+                || !kotaTujuan.trim().matches("[a-zA-Z ]+")) {
+            throw new IllegalArgumentException(
+                    "Nama kota hanya boleh berisi huruf dan spasi.");
         }
 
         if (kotaAsal.trim().equalsIgnoreCase(kotaTujuan.trim())) {
-            throw new IllegalArgumentException("Kota asal dan tujuan tidak boleh sama.");
+            throw new IllegalArgumentException(
+                    "Kota asal dan tujuan tidak boleh sama.");
         }
 
         this.kotaAsal = kotaAsal.trim();
@@ -94,8 +103,12 @@ public class JadwalShuttle {
             throw new IllegalArgumentException("Kapasitas kursi harus antara 1-30.");
         }
 
-        if (kursiTerisi != null && kapasitasKursi < kursiTerisi.size()) {
-            throw new IllegalArgumentException("Kapasitas tidak boleh kurang dari jumlah kursi yang sudah terisi.");
+        if (kursiTerisi != null) {
+            for (int nomorKursi : kursiTerisi) {
+                if (nomorKursi > kapasitasKursi) {
+                    throw new IllegalArgumentException("Kapasitas tidak boleh lebih kecil " + "dari nomor kursi yang sudah terisi.");
+                }
+            }
         }
 
         this.kapasitasKursi = kapasitasKursi;

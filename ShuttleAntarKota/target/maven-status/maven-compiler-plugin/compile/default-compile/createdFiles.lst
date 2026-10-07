@@ -1,9 +1,12 @@
 app/Main.class
 model/Pemesanan.class
+model/PembayaranQRIS.class
+model/Pembayaran.class
 view/ShuttleView.class
 model/TiketReguler.class
 model/Tiket.class
 controller/ShuttleController.class
 model/JadwalShuttle.class
 model/TiketPrioritas.class
+model/PembayaranTunai.class
 model/Penumpang.class

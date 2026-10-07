@@ -17,6 +17,11 @@ public class TiketReguler extends Tiket {
     public String getJenisTiket() {
         return "Reguler";
     }
+    
+    @Override
+    public double hitungHarga() {
+        return getHargaDasar();
+    }
 
     @Override
     public void tampilkanTiket() {

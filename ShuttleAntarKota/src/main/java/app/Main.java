@@ -18,3 +18,11 @@ public class Main {
             view.jalankan();
         }
 }
+
+/*
+    Catatan ini sebagai tanggapan dari konsep abgnya.
+    Saya tidak menambahkan konsep inheritance baru pada penumpang karena menurut saya
+    ini sudah cukup baik, sesuai dengan konsep yang telah saya pahamin ini dan selain itu juga
+    tidak banyak waktu buat menambah fitur lebih lagi karna banyak tugas hehe, 
+    btw terimakasih atas masukannya bang😁.
+*/

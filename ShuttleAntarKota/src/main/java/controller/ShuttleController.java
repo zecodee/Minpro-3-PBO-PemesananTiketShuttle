@@ -11,6 +11,7 @@ import model.Pemesanan;
 import model.Tiket;
 import model.TiketReguler;
 import model.TiketPrioritas;
+import model.Pembayaran;
 
 /**
  *
@@ -186,11 +187,6 @@ public class ShuttleController {
             return;
         }
 
-        if (kapasitas < jadwal.getKursiTerisi().size()) {
-            System.out.println("Kapasitas tidak boleh kurang " + "dari jumlah kursi yang sudah terisi.");
-            return;
-        }
-
         jadwal.setRute(asal, tujuan);
         jadwal.setJamBerangkat(jam);
         jadwal.setHarga(harga);
@@ -287,6 +283,12 @@ public class ShuttleController {
             return;
         }
 
+        if (pemesanan.isSudahDibayar()) {
+            System.out.println("Pemesanan tidak dapat dibatalkan.");
+            System.out.println("Pemesanan sudah dibayar.");
+            return;
+        }
+
         JadwalShuttle jadwal = cariJadwal(pemesanan.getIdJadwal());
 
         if (jadwal != null) {
@@ -310,13 +312,54 @@ public class ShuttleController {
         }
         return null;
     }
+    
+    public boolean adaTiket() {
+        for (Pemesanan pemesanan : daftarPemesanan) {
+            if (!pemesanan.getDaftarTiket().isEmpty()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public void tampilkanDaftarTiket() {
+        if (!adaTiket()) {
+            System.out.println("Belum ada tiket yang tersedia.");
+            return;
+        }
+
+        System.out.println();
+        System.out.println("==========================================================================");
+        System.out.println("                            DAFTAR TIKET");
+        System.out.println("==========================================================================");
+        System.out.printf("%-12s %-18s %-28s %-10s%n", "NO. TIKET", "PENUMPANG", "RUTE", "JAM");
+        System.out.println("--------------------------------------------------------------------------");
+
+        for (Pemesanan pemesanan : daftarPemesanan) {
+            Penumpang penumpang = cariPenumpang(pemesanan.getIdPenumpang());
+            JadwalShuttle jadwal = cariJadwal(pemesanan.getIdJadwal());
+
+            for (Tiket tiket : pemesanan.getDaftarTiket()) {
+                String namaPenumpang = penumpang != null ? penumpang.getNama() : "-";
+                String rute = jadwal != null ? jadwal.getKotaAsal() + " -> " + jadwal.getKotaTujuan() : "-";
+                String jam = jadwal != null ? jadwal.getJamBerangkat() : "-";
+                System.out.printf("%-12s %-18s %-28s %-10s%n", tiket.getNomorTiket(), namaPenumpang, rute, jam);
+            }
+        }
+
+        System.out.println("==========================================================================");
+    }
 
     public int getTotalTiketTerjual() {
         int total = 0;
 
         for (Pemesanan pemesanan : daftarPemesanan) {
-            total += pemesanan.getJumlahTiket();
+            if (pemesanan.isSudahDibayar()) {
+                total += pemesanan.getJumlahTiket();
+            }
         }
+
         return total;
     }
     
@@ -324,6 +367,10 @@ public class ShuttleController {
         int total = 0;
 
         for (Pemesanan pemesanan : daftarPemesanan) {
+            if (!pemesanan.isSudahDibayar()) {
+                continue;
+            }
+
             for (Tiket tiket : pemesanan.getDaftarTiket()) {
                 if (tiket.getJenisTiket().equalsIgnoreCase("Reguler")) {
                     total++;
@@ -338,9 +385,14 @@ public class ShuttleController {
         int total = 0;
 
         for (Pemesanan pemesanan : daftarPemesanan) {
+            if (!pemesanan.isSudahDibayar()) {
+                continue;
+            }
+
             for (Tiket tiket : pemesanan.getDaftarTiket()) {
                 if (tiket.getJenisTiket().equalsIgnoreCase("Prioritas")) {
                     total++;
+
                 }
             }
         }
@@ -352,6 +404,11 @@ public class ShuttleController {
         double total = 0;
 
         for (Pemesanan pemesanan : daftarPemesanan) {
+
+            if (!pemesanan.isSudahDibayar()) {
+                continue;
+            }
+
             for (Tiket tiket : pemesanan.getDaftarTiket()) {
                 if (tiket.getJenisTiket().equalsIgnoreCase("Reguler")) {
                     total += tiket.hitungHarga();
@@ -366,6 +423,11 @@ public class ShuttleController {
         double total = 0;
 
         for (Pemesanan pemesanan : daftarPemesanan) {
+
+            if (!pemesanan.isSudahDibayar()) {
+                continue;
+            }
+
             for (Tiket tiket : pemesanan.getDaftarTiket()) {
                 if (tiket.getJenisTiket().equalsIgnoreCase("Prioritas")) {
                     total += tiket.hitungHarga();
@@ -380,9 +442,25 @@ public class ShuttleController {
         double total = 0;
 
         for (Pemesanan pemesanan : daftarPemesanan) {
-            total += pemesanan.getTotalHarga();
+            if (pemesanan.isSudahDibayar()) {
+                total += pemesanan.getTotalHarga();
+            }
         }
 
         return total;
+    }
+    
+    public void bayarPemesanan(
+            String idPemesanan,
+            Pembayaran pembayaran) {
+
+        Pemesanan pemesanan = cariPemesanan(idPemesanan);
+
+        if (pemesanan == null) {
+            throw new IllegalArgumentException(
+                    "Pemesanan tidak ditemukan.");
+        }
+
+        pemesanan.bayar(pembayaran);
     }
 }
